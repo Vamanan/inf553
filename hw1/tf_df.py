@@ -15,18 +15,21 @@ def mapper(record):
     # key: document identifier
     # value: document contents
     dname = record[0]
-    content = record[1].lower
-    words = value.split()
-    for w in words:
-      mr.emit_intermediate(w, 1)
+    content = record[1].lower()
+    words = content.split()
+    for w in set(words):
+     if re.match(r'\w+$', w):
+      mr.emit_intermediate(w, [1,(dname,words.count(w))])
 
 def reducer(key, list_of_values):
     # key: word
-    # value: list of occurrence counts
-    total = 0
-    for v in list_of_values:
-      total += v
-    mr.emit((key, total))
+    # value: df along with individual tf tuples
+    dftotal = 0
+    pairs=[]
+    for l in list_of_values:
+      dftotal += l[0]
+      pairs.append(l[1])
+    mr.emit((key, dftotal,pairs))
 
 # Do not modify below this line
 # =============================
