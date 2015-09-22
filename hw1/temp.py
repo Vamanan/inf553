@@ -19,17 +19,14 @@ def mapper(record):
     words = content.split()
     for w in set(words):
      if re.match(r'\w+$', w):
-      mr.emit_intermediate(w, [1,(dname,words.count(w))])
+      mr.emit_intermediate(w, (dname,words.count(w)))
 
 def reducer(key, list_of_values):
     # key: word
     # value: df along with individual tf tuples
-    dftotal = 0
-    pairs=[]
-    for l in list_of_values:
-      dftotal += l[0]
-      pairs.append(l[1])
-    mr.emit((key, dftotal,pairs))
+    dftotal = len(list_of_values)
+    
+    mr.emit((key, dftotal,list_of_values))
 
 # Do not modify below this line
 # =============================

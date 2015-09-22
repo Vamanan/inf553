@@ -26,6 +26,15 @@ def mapper(record):
 def reducer(key, list_of_values):
     # key: (i,k)
     # value: corresponding values
+    '''pairlist=list(itertools.combinations(list_of_values,2))
+    #print pairlist
+    opdict={}
+    for t in pairlist:
+     if t[0][0]=='a' and t[1][0]=='b':
+      opdict[(t[0][1],t[1][1])]=t[0][2]*t[1][2] 
+    for key in opdict:
+     mr.emit([key[0],key[1],opdict[key]])
+    #mr.emit([list_of_values[0][0],list_of_values[1][0],list_of_values[1][0]*list_of_values[1][1]])'''
     adict={}
     bdict={}
     for t in list_of_values:
