@@ -18,38 +18,38 @@ def loadratings(filename):
    else:
     ratings[uid][mname]=float(rating)
 
-def pearsoncorrelation(u1,u2):
- commonmovies=list(set(ratings[u1].keys())&set(ratings[u2].keys()))
- u1_avg=sum(ratings[u1].values())/len(ratings[u1])
- u2_avg=sum(ratings[u2].values())/len(ratings[u2])
+def pearson_correlation(user1,user2):
+ commonmovies=list(set(ratings[user1].keys())&set(ratings[user2].keys()))
+ u1_avg=sum(ratings[user1].values())/len(ratings[user1])
+ u2_avg=sum(ratings[user2].values())/len(ratings[user2])
  num_sum=0
  den_sum_u1=0
  den_sum_u2=0
  for movie in commonmovies:
-  num_sum+=(ratings[u1][movie]-u1_avg)*(ratings[u2][movie]-u2_avg)
-  den_sum_u1+=(ratings[u1][movie]-u1_avg)**2
-  den_sum_u2+=(ratings[u2][movie]-u2_avg)**2
+  num_sum+=(ratings[user1][movie]-u1_avg)*(ratings[user2][movie]-u2_avg)
+  den_sum_u1+=(ratings[user1][movie]-u1_avg)**2
+  den_sum_u2+=(ratings[user2][movie]-u2_avg)**2
  den_sum_u1=math.sqrt(den_sum_u1)
  den_sum_u2=math.sqrt(den_sum_u2)
  return num_sum/(den_sum_u1*den_sum_u2)
  
-def K_nearest_neighbors(uid,k):
+def K_nearest_neighbors(user1,k):
  pearson_scores={}
  for user in ratings:
-  if user != uid:
-   pearson_scores[user]=pearsoncorrelation(user,uid)
+  if user != user1:
+   pearson_scores[user]=pearson_correlation(user,uid)
  top_k=sorted(pearson_scores,key=pearson_scores.get,reverse=True)[:k]
  k_nn={key:pearson_scores[key] for key in top_k}
  #print k_nn
  return k_nn
    
-def Predict(uid, movie, k_nn):
+def Predict(user1, item, k_nearest_neighbors):
  num=0
  den=0
- for user in k_nn:
-  if movie in ratings[user]:
-   num+=k_nn[user]*ratings[user][movie]
-   den+=k_nn[user]
+ for user in k_nearest_neighbors:
+  if item in ratings[user]:
+   num+=k_nearest_neighbors[user]*ratings[user][item]
+   den+=k_nearest_neighbors[user]
  return num/den
  
 
