@@ -1,10 +1,10 @@
 import sys
 import math
-#ipfilename=sys.argv[1]
-ipfilename='sample.tsv'
-'''uid=sys.argv[2]
+ipfilename=sys.argv[1]
+
+uid=sys.argv[2]
 moviename=sys.argv[3]
-k=sys.argv[4]'''
+k=int(sys.argv[4])
 
 #holds all ratings. will be dictionary with keys=uid, value = {movie:rating} dict
 ratings={}
@@ -38,14 +38,35 @@ def K_nearest_neighbors(uid,k):
  for user in ratings:
   if user != uid:
    pearson_scores[user]=pearsoncorrelation(user,uid)
- k_nn={k:pearson_scores[k] for k in sorted(pearson_scores,key=pearson_scores.get,reverse=True)[:k]}
+ top_k=sorted(pearson_scores,key=pearson_scores.get,reverse=True)[:k]
+ k_nn={key:pearson_scores[key] for key in top_k}
+ #print k_nn
  return k_nn
    
-
+def Predict(uid, movie, k_nn):
+ num=0
+ den=0
+ for user in k_nn:
+  if movie in ratings[user]:
+   num+=k_nn[user]*ratings[user][movie]
+   den+=k_nn[user]
+ return num/den
+ 
 
 def main():
  #populate ratings dataset
  loadratings(ipfilename)
+ #print ratings
+ #identify knn
+ k_nn=K_nearest_neighbors(uid,k)
+ #calculate prediction
+ prediction=Predict(uid,moviename,k_nn)
+ #print op
+ for key in sorted(k_nn,key=k_nn.get,reverse=True):
+  print key+' '+str(k_nn[key])
+ print
+ print
+ print prediction
  
 
 if __name__=="__main__":
