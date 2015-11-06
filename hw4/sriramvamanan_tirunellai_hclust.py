@@ -26,9 +26,9 @@ for i in range(len(data)):
   cluster_map[label].append(i)
 
 #store cluster distances
-distances={} #key=distance;value=list of tuples each tuple is a cluster pair
+distances={} #key=distance;value=list of tuples each tuple is a cluster
 #keep track of merged clusters
-merged=[] #list of tuples; each tuple is a pair of clusters that are merged
+merged=range(len(points)) #list of clusters
 
 def euclidian_dist(key1,key2):
  sum=0
@@ -40,7 +40,7 @@ def compute_dist:
  for p in itertools.combinations(points.keys(),2):
   dist=euclidian_dist(p[0],p[1])
   if dist not in distances:
-   distances[dist]=[p]
+   distances[dist]=(p[0],p[1])
   else:
    if p not in distances[dist]:
     distances[dist].append(p)
@@ -52,13 +52,16 @@ def HAC():
  #heapify
  heap=[]
  for item in distances:
-  heapq.heappush(heap,item)
+  for i in range(len(distances[item])): #push the distance value onto the heap once per pair
+   heapq.heappush(heap,item)
  #heap now is a heap of distances
  while len(merged)<=k-1:
-  min_dist=heapq.heappop(heap)
-  #check if this distance corresponds to that between merged clusters
-  for pair in distances[min_dist]
-  
+  while(True):
+   min_dist=heapq.heappop(heap)
+   #check if this distance corresponds to that between merged clusters
+   for pair in distances[min_dist]:
+   s if pair in merged:
+   
     
   
  
